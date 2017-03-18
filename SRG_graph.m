@@ -1,4 +1,4 @@
-function [init_sets, labeled_cells] = SRG_graph( init_sets, cell_log_intensity, cell_area, n, adj_mat, invalid )
+function [init_sets, labeled_cells] = SRG_graph( init_sets, cell_log_intensity, cell_area, n, adj_mat, invalid, verbose )
 % graph-based seeded region growing
 %
 % Input variables:
@@ -12,12 +12,17 @@ function [init_sets, labeled_cells] = SRG_graph( init_sets, cell_log_intensity, 
 % adj_mat: the adjacent matrix that shows the connectivity of voronoi cells
 % invalid: indices of invalid voronoi cells; invalid is due to that the
 % area is zero/the voronoi cell is on the boundary
+% verbose: whether print out the status
 %
 % Output variables:
 %
 % init_sets: (cell) the region sets after finish growing
 % labeled_cells: the voronoi cells that have been assigned to one of the
 % region sets
+
+if nargin==6
+    verbose = false;
+end
 
 % initialize growing region sets
 m = length(init_sets);
@@ -50,8 +55,10 @@ n_remain = n-n_init-n_invalid;
 % start the iteration to assign the remaining voronoi cells 
 for i = 1:n_remain
     
-    if mod(i, 100)==0
-        i
+    if verbose
+        if mod(i, 100)==0
+            i
+        end
     end
     
     % select the pair of a growing region set and a neighboring voronoi 
