@@ -3,10 +3,10 @@ function adj_mat = get_adj_mat( E, n )
 % E is obtained from function edges
 % adj_mat: adjacent matrix, 1 represents that there is an edge
 
-adj_mat = zeros(n);
+adj_mat = false(n);
 for i = 1:size(E, 1)
-    adj_mat(E(i, 1), E(i, 2)) = 1;
-    adj_mat(E(i, 2), E(i, 1)) = 1;
+    adj_mat(E(i, 1), E(i, 2)) = true;
+    adj_mat(E(i, 2), E(i, 1)) = true;
 end
 
 end

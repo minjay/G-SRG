@@ -7,7 +7,7 @@ diff_set = setdiff(1:n, [seed_set labeled_cells]);
 nbr_cells = [];
 for i = diff_set
     for j = seed_set
-        if adj_mat(i, j)==1
+        if adj_mat(i, j)
             nbr_cells = [nbr_cells i];
             break
         end
