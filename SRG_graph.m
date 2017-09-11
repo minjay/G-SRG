@@ -96,14 +96,16 @@ for i = 1:n_remain
         if ismember(min_k, nbr_cells{j})
             % delete cell min_k from the set of neighbors for each growing region set
             nbr_cells{j} = setdiff(nbr_cells{j}, min_k);
-            % update min_c_pairs for region j
-            if ~isempty(nbr_cells{j})
-                [min_c, min_index] = min(abs(cell_log_intensity(nbr_cells{j})-region_log_intensity(j)));
-                min_c_pairs(j, 1) = min_c;
-                min_c_pairs(j, 2) = nbr_cells{j}(min_index);
-            else
-                min_c_pairs(j, 1) = realmax;
-                min_c_pairs(j, 2) = 0;
+            if min_c_pairs(j, 2)==min_k
+                % update min_c_pairs for region j
+                if ~isempty(nbr_cells{j})
+                    [min_c, min_index] = min(abs(cell_log_intensity(nbr_cells{j})-region_log_intensity(j)));
+                    min_c_pairs(j, 1) = min_c;
+                    min_c_pairs(j, 2) = nbr_cells{j}(min_index);
+                else
+                    min_c_pairs(j, 1) = realmax;
+                    min_c_pairs(j, 2) = 0;
+                end
             end
         end
     end
