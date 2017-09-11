@@ -1,4 +1,4 @@
-function [init_sets, labeled_cells] = SRG_graph( init_sets, cell_log_intensity, cell_area, n, adj_mat, invalid, verbose )
+function [init_sets, labeled_cells] = SRG_graph( init_sets, cell_log_intensity, cell_area, n, adj_mat, invalid, verbose, print_n )
 % graph-based seeded region growing
 %
 % Input variables:
@@ -13,6 +13,7 @@ function [init_sets, labeled_cells] = SRG_graph( init_sets, cell_log_intensity, 
 % invalid: indices of invalid voronoi cells; invalid is due to that the
 % area is zero/the voronoi cell is on the boundary
 % verbose: whether print out the status
+% print_n: print every n iterations
 %
 % Output variables:
 %
@@ -70,8 +71,8 @@ n_remain = n-n_init-n_invalid;
 for i = 1:n_remain
     
     if verbose
-        if mod(i, 100)==0
-            i
+        if mod(i, print_n)==0
+            disp('Iteration ' + str(i) + '...')
         end
     end
     
