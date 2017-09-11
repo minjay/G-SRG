@@ -45,6 +45,20 @@ for j = 1:m
     nbr_cells{j} = cmp_nbr( init_sets{j}, adj_mat, n, [labeled_cells invalid] );
 end
 
+% min_c_pairs contains the min diff and the corresponding cell index
+min_c_pairs = zeros(m, 2);
+for j = 1:m
+    % if region j has neighbors
+    if ~isempty(nbr_cells{j})
+        [min_c, min_index] = min(abs(cell_log_intensity(nbr_cells{j})-region_log_intensity(j)));
+        min_c_pairs(j, 1) = min_c;
+        min_c_pairs(j, 2) = nbr_cells{j}(min_index);
+    else
+        min_c_pairs(j, 1) = realmax;
+        min_c_pairs(j, 2) = 0;
+    end
+end
+
 % get the number of voronoi cells that have been assigned to the initial 
 % growing region sets
 n_init = length(labeled_cells);
@@ -63,20 +77,9 @@ for i = 1:n_remain
     
     % select the pair of a growing region set and a neighboring voronoi 
     % cell with the smallest value of the criterion
-    min_c = realmax;
     % j refers to regions, and k refers to cells
-    for j = 1:m
-        for k = nbr_cells{j}
-            % the criterion is the abs difference between the log 
-            % intensities
-            c = abs(cell_log_intensity(k)-region_log_intensity(j));
-            if c<min_c
-                min_c = c;
-                min_j = j;
-                min_k = k;
-            end
-        end
-    end
+    [~, min_j] = min(min_c_pairs(:, 1));
+    min_k = min_c_pairs(min_j, 2);
     
     % update the selected growing region set
     labeled_cells = [labeled_cells min_k];
@@ -86,10 +89,23 @@ for i = 1:n_remain
         (region_area(min_j)+cell_area(min_k)));
     region_area(min_j) = region_area(min_j)+cell_area(min_k);
     % add the set of neighbors for cell min_k to that of region min_j
-    nbr_cells{min_j} = [nbr_cells{min_j} cmp_nbr( min_k, adj_mat, n, [labeled_cells invalid] )];
-    % delete cell min_k from the set of neighbors for each growing region set
+    % make sure the uniqueness of the elements
+    nbr_cells{min_j} = unique([nbr_cells{min_j} cmp_nbr( min_k, adj_mat, n, [labeled_cells invalid] )]);
+   
     for j = 1:m
-        nbr_cells{j} = setdiff(nbr_cells{j}, min_k);
+        if ismember(min_k, nbr_cells{j})
+            % delete cell min_k from the set of neighbors for each growing region set
+            nbr_cells{j} = setdiff(nbr_cells{j}, min_k);
+            % update min_c_pairs for region j
+            if ~isempty(nbr_cells{j})
+                [min_c, min_index] = min(abs(cell_log_intensity(nbr_cells{j})-region_log_intensity(j)));
+                min_c_pairs(j, 1) = min_c;
+                min_c_pairs(j, 2) = nbr_cells{j}(min_index);
+            else
+                min_c_pairs(j, 1) = realmax;
+                min_c_pairs(j, 2) = 0;
+            end
+        end
     end
     
 end
