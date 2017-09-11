@@ -72,7 +72,7 @@ for i = 1:n_remain
     
     if verbose
         if mod(i, print_n)==0
-            disp('Iteration ' + num2str(i) + '...')
+            disp(['Iteration ', num2str(i), '...'])
         end
     end
     
