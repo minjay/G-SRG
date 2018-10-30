@@ -1,7 +1,13 @@
 function adj_mat = get_adj_mat( E, n )
-% transform edges to adjacent matrix
-% E is obtained from function edges
-% adj_mat: adjacent matrix, 1 represents that there is an edge
+% Gets adjacent matrix.
+% 
+% Args:
+%   E: A matrix each row of which represents the two vertices of an edge.
+%   n: Total number of cells.
+%
+% Returns:
+%   adj_mat: The adjacent matrix, where 1 represents that there is an edge,
+%   and 0 represents that there is no edge.
 
 adj_mat = false(n);
 for i = 1:size(E, 1)
