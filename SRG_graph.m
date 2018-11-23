@@ -84,7 +84,7 @@ for i = 1:n_remain
     [~, min_j] = min(min_c_pairs(:, 1));
     min_k = min_c_pairs(min_j, 2);
     if min_k == 0
-        disp('There are isolated cells so the algorithm terminates prematurely.')
+        disp('Warning: There are isolated cells so the algorithm terminates prematurely.')
         disp(['There are in total ', num2str(n_remain - i + 1), ' isolated cells.'])
         break
     end
